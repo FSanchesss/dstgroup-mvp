@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="178" rx="55" ry="8" fill="#000" fill-opacity="0.10"/>
+  <!-- Back person -->
+  <circle cx="138" cy="74" r="18" fill="url(#pb)"/>
+  <rect x="118" y="94" width="40" height="50" rx="12" fill="url(#pb)"/>
+  <!-- Front-left person -->
+  <circle cx="62" cy="78" r="17" fill="url(#pc)"/>
+  <rect x="43" y="97" width="38" height="48" rx="11" fill="url(#pc)"/>
+  <!-- Center person (main) -->
+  <circle cx="100" cy="68" r="22" fill="url(#pa)"/>
+  <circle cx="100" cy="68" r="11" fill="#27272a" fill-opacity="0.3"/>
+  <!-- Face details (main) -->
+  <circle cx="94" cy="65" r="3" fill="#d4d4d8"/>
+  <circle cx="106" cy="65" r="3" fill="#d4d4d8"/>
+  <path d="M94 75 Q100 80 106 75" stroke="#d4d4d8" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Body main -->
+  <rect x="76" y="91" width="48" height="60" rx="14" fill="url(#pa)"/>
+  <!-- ID badge / card -->
+  <rect x="88" y="104" width="24" height="16" rx="3" fill="#27272a" fill-opacity="0.4"/>
+  <rect x="91" y="107" width="10" height="2" rx="1" fill="#a1a1aa"/>
+  <rect x="91" y="111" width="15" height="2" rx="1" fill="#a1a1aa" fill-opacity="0.6"/>
+  <rect x="91" y="115" width="8" height="2" rx="1" fill="#a1a1aa" fill-opacity="0.4"/>
+  <!-- Floating badges -->
+  <rect x="140" y="46" width="24" height="14" rx="7" fill="#52525b" fill-opacity="0.7"/>
+  <circle cx="36" cy="112" r="5" fill="#9ca3af" fill-opacity="0.4"/>
+  <circle cx="168" cy="118" r="4" fill="#d1d5db" fill-opacity="0.3"/>
+  <circle cx="55" cy="50" r="3.5" fill="#9ca3af" fill-opacity="0.5"/>
+  <defs>
+    <linearGradient id="pa" x1="78" y1="46" x2="122" y2="151" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3f3f46"/>
+      <stop offset="1" stop-color="#18181b"/>
+    </linearGradient>
+    <linearGradient id="pb" x1="118" y1="56" x2="158" y2="144" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#52525b" stop-opacity="0.7"/>
+      <stop offset="1" stop-color="#27272a" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="pc" x1="43" y1="61" x2="81" y2="145" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71717a" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#3f3f46" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+</svg>

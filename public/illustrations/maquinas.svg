@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Shadow -->
+  <ellipse cx="100" cy="178" rx="56" ry="8" fill="#000" fill-opacity="0.10"/>
+  <!-- Machine base platform -->
+  <rect x="40" y="148" width="120" height="14" rx="4" fill="url(#mb)"/>
+  <!-- Machine arm base -->
+  <rect x="72" y="118" width="28" height="34" rx="4" fill="url(#ma)"/>
+  <!-- Machine arm segment 1 -->
+  <rect x="78" y="78" width="16" height="44" rx="5" fill="url(#mc)" transform="rotate(-12 86 100)"/>
+  <!-- Machine arm joint 1 -->
+  <circle cx="86" cy="78" r="10" fill="url(#md)"/>
+  <circle cx="86" cy="78" r="5" fill="#1a1a1a"/>
+  <!-- Machine arm segment 2 -->
+  <rect x="82" y="44" width="14" height="38" rx="5" fill="url(#mc)" transform="rotate(18 89 63)"/>
+  <!-- Machine arm joint 2 -->
+  <circle cx="100" cy="52" r="9" fill="url(#md)"/>
+  <circle cx="100" cy="52" r="4.5" fill="#1a1a1a"/>
+  <!-- Gripper -->
+  <rect x="108" y="36" width="6" height="16" rx="3" fill="url(#mc)" transform="rotate(30 111 44)"/>
+  <rect x="116" y="34" width="6" height="16" rx="3" fill="url(#mc)" transform="rotate(-10 119 42)"/>
+  <!-- Work piece -->
+  <rect x="130" y="130" width="22" height="22" rx="4" fill="url(#mw)"/>
+  <rect x="133" y="133" width="16" height="16" rx="2" fill="#3f3f46" fill-opacity="0.5"/>
+  <!-- Light beam -->
+  <line x1="120" y1="42" x2="141" y2="130" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="4 3" stroke-opacity="0.5"/>
+  <!-- Floating sparks -->
+  <circle cx="52" cy="60" r="3.5" fill="#d1d5db" fill-opacity="0.6"/>
+  <circle cx="46" cy="100" r="2.5" fill="#9ca3af" fill-opacity="0.4"/>
+  <circle cx="160" cy="80" r="4" fill="#6b7280" fill-opacity="0.3"/>
+  <circle cx="155" cy="115" r="2.5" fill="#d1d5db" fill-opacity="0.5"/>
+  <defs>
+    <linearGradient id="ma" x1="72" y1="118" x2="100" y2="162" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#27272a"/>
+      <stop offset="1" stop-color="#18181b"/>
+    </linearGradient>
+    <linearGradient id="mb" x1="40" y1="148" x2="160" y2="162" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3f3f46"/>
+      <stop offset="1" stop-color="#27272a"/>
+    </linearGradient>
+    <linearGradient id="mc" x1="78" y1="44" x2="96" y2="122" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#52525b"/>
+      <stop offset="1" stop-color="#3f3f46"/>
+    </linearGradient>
+    <linearGradient id="md" x1="76" y1="68" x2="96" y2="88" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#71717a"/>
+      <stop offset="1" stop-color="#52525b"/>
+    </linearGradient>
+    <linearGradient id="mw" x1="130" y1="130" x2="152" y2="152" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#52525b"/>
+      <stop offset="1" stop-color="#3f3f46"/>
+    </linearGradient>
+  </defs>
+</svg>

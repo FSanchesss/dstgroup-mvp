@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadwork WebViewer 3D — Estrutura Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #1a1a2e; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+
+    #canvas-container { width: 100vw; height: 100vh; }
+
+    #toolbar {
+      position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px; padding: 8px 16px;
+      display: flex; align-items: center; gap: 12px;
+      z-index: 100;
+    }
+    .toolbar-label {
+      color: #a0aec0; font-size: 11px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .toolbar-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      color: #e2e8f0; padding: 6px 14px; border-radius: 8px;
+      cursor: pointer; font-size: 12px; font-weight: 500;
+      transition: all 0.2s;
+    }
+    .toolbar-btn:hover { background: rgba(255,255,255,0.2); }
+    .toolbar-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+    .sep { width: 1px; height: 24px; background: rgba(255,255,255,0.15); }
+
+    #info-panel {
+      position: fixed; top: 70px; right: 16px;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 16px; min-width: 220px;
+      color: #e2e8f0; z-index: 100;
+    }
+    #info-panel h3 { font-size: 13px; font-weight: 700; color: #93c5fd; margin-bottom: 12px; }
+    .info-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+    .info-key { font-size: 11px; color: #94a3b8; }
+    .info-val { font-size: 11px; color: #f1f5f9; font-weight: 600; }
+
+    #hover-tooltip {
+      position: fixed; display: none; pointer-events: none;
+      background: rgba(15,23,42,0.95); border: 1px solid #3b82f6;
+      border-radius: 8px; padding: 10px 14px; color: #f1f5f9;
+      font-size: 12px; z-index: 200; min-width: 180px;
+    }
+    #hover-tooltip .tt-name { font-weight: 700; color: #93c5fd; margin-bottom: 4px; }
+    #hover-tooltip .tt-row { color: #94a3b8; }
+
+    #legend {
+      position: fixed; bottom: 16px; left: 16px;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px; padding: 14px 18px;
+      color: #e2e8f0; z-index: 100;
+    }
+    #legend h4 { font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: #cbd5e1; }
+    .legend-color { width: 28px; height: 10px; border-radius: 3px; }
+
+    #compass {
+      position: fixed; bottom: 16px; right: 16px;
+      width: 64px; height: 64px; z-index: 100;
+      background: rgba(255,255,255,0.06); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    #compass canvas { width: 56px; height: 56px; }
+
+    #loading {
+      position: fixed; inset: 0; background: #1a1a2e;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 999; transition: opacity 0.6s;
+    }
+    #loading .logo { font-size: 22px; font-weight: 800; color: #3b82f6; margin-bottom: 8px; letter-spacing: -0.5px; }
+    #loading .sub { color: #64748b; font-size: 13px; margin-bottom: 32px; }
+    .progress-bar { width: 240px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); border-radius: 2px; animation: load 1.2s ease-in-out forwards; }
+    @keyframes load { from { width: 0 } to { width: 100% } }
+  </style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="logo">▣ Cadwork WebViewer</div>
+  <div class="sub">Carregando estrutura 3D...</div>
+  <div class="progress-bar"><div class="progress-fill"></div></div>
+</div>
+
+<div id="canvas-container"></div>
+
+<div id="toolbar">
+  <span class="toolbar-label">ZETWOOD</span>
+  <div class="sep"></div>
+  <button class="toolbar-btn active" id="btn-perspective">Perspectiva</button>
+  <button class="toolbar-btn" id="btn-top">Topo</button>
+  <button class="toolbar-btn" id="btn-front">Frente</button>
+  <button class="toolbar-btn" id="btn-side">Lateral</button>
+  <div class="sep"></div>
+  <button class="toolbar-btn" id="btn-wire">Wireframe</button>
+  <button class="toolbar-btn" id="btn-reset">↺ Reset</button>
+</div>
+
+<div id="info-panel">
+  <h3>📦 Projeto Demo</h3>
+  <div class="info-row"><span class="info-key">Estrutura</span><span class="info-val">Galpão Industrial</span></div>
+  <div class="info-row"><span class="info-key">Total de peças</span><span class="info-val" id="stat-pecas">—</span></div>
+  <div class="info-row"><span class="info-key">Conjuntos</span><span class="info-val" id="stat-conj">—</span></div>
+  <div class="info-row"><span class="info-key">Material</span><span class="info-val">Madeira Laminada</span></div>
+  <div class="info-row"><span class="info-key">Comprimento</span><span class="info-val">24,00 m</span></div>
+  <div class="info-row"><span class="info-key">Largura</span><span class="info-val">12,00 m</span></div>
+  <div class="info-row"><span class="info-key">Altura</span><span class="info-val">6,50 m</span></div>
+  <div class="info-row"><span class="info-key">Software</span><span class="info-val">Cadwork v29</span></div>
+</div>
+
+<div id="hover-tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div class="tt-row" id="tt-grupo"></div>
+  <div class="tt-row" id="tt-dims"></div>
+  <div class="tt-row" id="tt-mat"></div>
+</div>
+
+<div id="legend">
+  <h4>Grupos</h4>
+  <div class="legend-item"><div class="legend-color" style="background:#7c3aed"></div>Pilares</div>
+  <div class="legend-item"><div class="legend-color" style="background:#2563eb"></div>Vigas Principais</div>
+  <div class="legend-item"><div class="legend-color" style="background:#0891b2"></div>Vigas Secundárias</div>
+  <div class="legend-item"><div class="legend-color" style="background:#16a34a"></div>Terças</div>
+  <div class="legend-item"><div class="legend-color" style="background:#b45309"></div>Contraventamento</div>
+  <div class="legend-item"><div class="legend-color" style="background:#be123c"></div>Caibros</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+// ─── Scene Setup ──────────────────────────────────────────────────────────────
+const container = document.getElementById('canvas-container');
+const W = window.innerWidth, H = window.innerHeight;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+container.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#0f172a');
+scene.fog = new THREE.Fog('#0f172a', 40, 120);
+
+const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 500);
+camera.position.set(28, 18, 32);
+camera.lookAt(0, 3, 0);
+
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.07;
+controls.minDistance = 5;
+controls.maxDistance = 80;
+controls.maxPolarAngle = Math.PI / 2.05;
+
+// ─── Lighting ─────────────────────────────────────────────────────────────────
+const ambient = new THREE.AmbientLight(0x334155, 1.8);
+scene.add(ambient);
+
+const sun = new THREE.DirectionalLight(0xfff0d0, 2.5);
+sun.position.set(20, 40, 20);
+sun.castShadow = true;
+sun.shadow.camera.near = 0.1;
+sun.shadow.camera.far = 120;
+sun.shadow.camera.left = -30;
+sun.shadow.camera.right = 30;
+sun.shadow.camera.top = 30;
+sun.shadow.camera.bottom = -30;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.bias = -0.001;
+scene.add(sun);
+
+const fill = new THREE.DirectionalLight(0x7090ff, 0.6);
+fill.position.set(-10, 10, -20);
+scene.add(fill);
+
+const hemi = new THREE.HemisphereLight(0x334466, 0x111111, 0.8);
+scene.add(hemi);
+
+// ─── Ground ───────────────────────────────────────────────────────────────────
+const groundGeo = new THREE.PlaneGeometry(80, 80, 20, 20);
+const groundMat = new THREE.MeshStandardMaterial({
+  color: 0x0f1a2e, roughness: 0.9, metalness: 0.1,
+  wireframe: false
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid
+const grid = new THREE.GridHelper(60, 60, 0x1e3a5f, 0x162032);
+grid.position.y = 0.01;
+scene.add(grid);
+
+// ─── Materials ────────────────────────────────────────────────────────────────
+const MATS = {
+  pilar:    new THREE.MeshStandardMaterial({ color: 0x6d28d9, roughness: 0.6, metalness: 0.1 }),
+  vigaP:    new THREE.MeshStandardMaterial({ color: 0x1d4ed8, roughness: 0.6, metalness: 0.1 }),
+  vigaS:    new THREE.MeshStandardMaterial({ color: 0x0e7490, roughness: 0.6, metalness: 0.1 }),
+  terca:    new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.7, metalness: 0.0 }),
+  contra:   new THREE.MeshStandardMaterial({ color: 0x92400e, roughness: 0.8, metalness: 0.0 }),
+  caibro:   new THREE.MeshStandardMaterial({ color: 0x9f1239, roughness: 0.7, metalness: 0.0 }),
+  hover:    new THREE.MeshStandardMaterial({ color: 0xfbbf24, roughness: 0.4, metalness: 0.3, emissive: 0xfbbf24, emissiveIntensity: 0.2 }),
+};
+
+// ─── Piece Registry ───────────────────────────────────────────────────────────
+const allPieces = [];
+let pecaCount = 0;
+
+function addBeam(mat, pos, size, rot, meta) {
+  pecaCount++;
+  const geo = new THREE.BoxGeometry(size[0], size[1], size[2]);
+  const mesh = new THREE.Mesh(geo, mat.clone());
+  mesh.position.set(...pos);
+  if (rot) mesh.rotation.set(...rot);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  mesh.userData = { ...meta, origMat: mat, id: pecaCount };
+  scene.add(mesh);
+  allPieces.push(mesh);
+  return mesh;
+}
+
+// ─── Structural Config ────────────────────────────────────────────────────────
+const BAY_X = 6;    // vão entre pórticos (m)
+const BAYS  = 4;    // número de pórticos
+const W_STR = 12;   // largura total (m)
+const H_COL = 5.5;  // altura dos pilares
+const H_APX = 2.2;  // altura do cumeeira acima do pilar
+
+const HALF_L = (BAYS * BAY_X) / 2;  // metade do comprimento = 12
+const HALF_W = W_STR / 2;           // = 6
+
+// ─── Pilares ─────────────────────────────────────────────────────────────────
+for (let i = 0; i <= BAYS; i++) {
+  const x = -HALF_L + i * BAY_X;
+  // pilar esquerdo
+  addBeam(MATS.pilar, [x, H_COL / 2, -HALF_W], [0.2, H_COL, 0.2], null, {
+    nome: `Pilar P${i * 2 + 1}`, grupo: 'Pilares',
+    dims: `200×200×${(H_COL * 1000).toFixed(0)}mm`, material: 'GL24h'
+  });
+  // pilar direito
+  addBeam(MATS.pilar, [x, H_COL / 2, HALF_W], [0.2, H_COL, 0.2], null, {
+    nome: `Pilar P${i * 2 + 2}`, grupo: 'Pilares',
+    dims: `200×200×${(H_COL * 1000).toFixed(0)}mm`, material: 'GL24h'
+  });
+}
+
+// ─── Vigas Principais (tesouras / pórticos) ───────────────────────────────────
+const pitchAngle = Math.atan(H_APX / HALF_W);
+const rafterLen = Math.sqrt(HALF_W * HALF_W + H_APX * H_APX);
+
+for (let i = 0; i <= BAYS; i++) {
+  const x = -HALF_L + i * BAY_X;
+  const yBase = H_COL;
+  const yApex = H_COL + H_APX;
+  const midY  = (yBase + yApex) / 2;
+  const midZ_neg = -HALF_W / 2;
+  const midZ_pos =  HALF_W / 2;
+
+  // Perna esquerda
+  addBeam(MATS.vigaP, [x, midY, midZ_neg], [0.16, rafterLen + 0.1, 0.3],
+    [pitchAngle, 0, 0], {
+    nome: `Viga Principal VP${i * 2 + 1}`, grupo: 'Vigas Principais',
+    dims: `160×300×${(rafterLen * 1000).toFixed(0)}mm`, material: 'GL28h'
+  });
+  // Perna direita
+  addBeam(MATS.vigaP, [x, midY, midZ_pos], [0.16, rafterLen + 0.1, 0.3],
+    [-pitchAngle, 0, 0], {
+    nome: `Viga Principal VP${i * 2 + 2}`, grupo: 'Vigas Principais',
+    dims: `160×300×${(rafterLen * 1000).toFixed(0)}mm`, material: 'GL28h'
+  });
+
+  // Linha de base (tirante)
+  addBeam(MATS.vigaS, [x, yBase - 0.05, 0], [0.12, W_STR + 0.2, 0.16],
+    [0, 0, Math.PI / 2], {
+    nome: `Tirante T${i + 1}`, grupo: 'Vigas Secundárias',
+    dims: `120×160×${(W_STR * 1000).toFixed(0)}mm`, material: 'C24'
+  });
+}
+
+// ─── Vigas de Cumeeira ────────────────────────────────────────────────────────
+const ridgeY = H_COL + H_APX;
+addBeam(MATS.vigaS, [0, ridgeY, 0], [BAYS * BAY_X, 0.14, 0.2], null, {
+  nome: 'Viga Cumeeira VC1', grupo: 'Vigas Secundárias',
+  dims: `140×200×${(BAYS * BAY_X * 1000).toFixed(0)}mm`, material: 'GL24h'
+});
+
+// ─── Vigas de Frechal (laterais) ─────────────────────────────────────────────
+for (const z of [-HALF_W, HALF_W]) {
+  addBeam(MATS.vigaS, [0, H_COL, z], [BAYS * BAY_X, 0.14, 0.2], null, {
+    nome: `Frechal F${z < 0 ? 1 : 2}`, grupo: 'Vigas Secundárias',
+    dims: `140×200×${(BAYS * BAY_X * 1000).toFixed(0)}mm`, material: 'GL24h'
+  });
+}
+
+// ─── Terças ───────────────────────────────────────────────────────────────────
+const TERCAS_PER_SIDE = 3;
+for (let t = 1; t <= TERCAS_PER_SIDE; t++) {
+  const frac = t / (TERCAS_PER_SIDE + 1);
+  const zNeg = -HALF_W + frac * HALF_W;
+  const zPos =  frac * HALF_W;
+  const dy   = Math.tan(pitchAngle) * frac * HALF_W;
+  const yT   = H_COL + dy;
+
+  for (const z of [zNeg, zPos]) {
+    addBeam(MATS.terca, [0, yT, z], [BAYS * BAY_X, 0.1, 0.16], null, {
+      nome: `Terça TC${t}-${z < 0 ? 'E' : 'D'}`, grupo: 'Terças',
+      dims: `100×160×${(BAYS * BAY_X * 1000).toFixed(0)}mm`, material: 'C24'
+    });
+  }
+}
+
+// ─── Caibros ──────────────────────────────────────────────────────────────────
+const CAIBRO_SPACING = 0.6;
+const numCaibros = Math.floor((BAYS * BAY_X) / CAIBRO_SPACING) - 1;
+for (let ci = 1; ci <= numCaibros; ci++) {
+  const cx = -HALF_L + CAIBRO_SPACING + (ci - 1) * CAIBRO_SPACING;
+  const midY_c = H_COL + H_APX / 2;
+
+  // esquerdo
+  addBeam(MATS.caibro, [cx, midY_c, -HALF_W / 2],
+    [0.06, rafterLen * 0.95, 0.1], [pitchAngle, 0, 0], {
+    nome: `Caibro CB${ci}-E`, grupo: 'Caibros',
+    dims: `60×100×${(rafterLen * 950).toFixed(0)}mm`, material: 'C24'
+  });
+  // direito
+  addBeam(MATS.caibro, [cx, midY_c, HALF_W / 2],
+    [0.06, rafterLen * 0.95, 0.1], [-pitchAngle, 0, 0], {
+    nome: `Caibro CB${ci}-D`, grupo: 'Caibros',
+    dims: `60×100×${(rafterLen * 950).toFixed(0)}mm`, material: 'C24'
+  });
+}
+
+// ─── Contraventamento ─────────────────────────────────────────────────────────
+// diagonais nos vãos extremos
+for (const side of [-1, 1]) {
+  const x0 = side * (HALF_L - BAY_X);
+  const x1 = side * HALF_L;
+  const cx  = (x0 + x1) / 2;
+  const diagLen = Math.sqrt(BAY_X * BAY_X + H_COL * H_COL);
+  const angle   = Math.atan(H_COL / BAY_X);
+
+  // frente
+  addBeam(MATS.contra, [cx, H_COL / 2, -HALF_W], [diagLen, 0.08, 0.1],
+    [0, 0, angle * side], {
+    nome: `Contraventamento CV${side < 0 ? 1 : 2}-F`, grupo: 'Contraventamento',
+    dims: `80×100×${(diagLen * 1000).toFixed(0)}mm`, material: 'C24'
+  });
+  // fundo
+  addBeam(MATS.contra, [cx, H_COL / 2, HALF_W], [diagLen, 0.08, 0.1],
+    [0, 0, angle * side], {
+    nome: `Contraventamento CV${side < 0 ? 1 : 2}-T`, grupo: 'Contraventamento',
+    dims: `80×100×${(diagLen * 1000).toFixed(0)}mm`, material: 'C24'
+  });
+}
+
+// ─── Update Stats ─────────────────────────────────────────────────────────────
+document.getElementById('stat-pecas').textContent = pecaCount;
+const grupos = new Set(allPieces.map(p => p.userData.grupo));
+document.getElementById('stat-conj').textContent = grupos.size;
+
+// ─── Raycaster (hover) ────────────────────────────────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+const tooltip = document.getElementById('hover-tooltip');
+let hoveredMesh = null;
+
+renderer.domElement.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / W) * 2 - 1;
+  mouse.y = -(e.clientY / H) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(allPieces);
+
+  if (hoveredMesh && (!hits.length || hits[0].object !== hoveredMesh)) {
+    hoveredMesh.material.copy(hoveredMesh.userData.origMat);
+    hoveredMesh.material.needsUpdate = true;
+    hoveredMesh = null;
+  }
+
+  if (hits.length) {
+    const mesh = hits[0].object;
+    if (mesh !== hoveredMesh) {
+      hoveredMesh = mesh;
+      mesh.material.copy(MATS.hover);
+      mesh.material.needsUpdate = true;
+    }
+    const d = mesh.userData;
+    document.getElementById('tt-name').textContent = d.nome;
+    document.getElementById('tt-grupo').textContent = '📂 ' + d.grupo;
+    document.getElementById('tt-dims').textContent = '📐 ' + d.dims;
+    document.getElementById('tt-mat').textContent = '🪵 Material: ' + d.material;
+    tooltip.style.display = 'block';
+    tooltip.style.left = (e.clientX + 16) + 'px';
+    tooltip.style.top  = (e.clientY - 40) + 'px';
+  } else {
+    tooltip.style.display = 'none';
+  }
+});
+
+renderer.domElement.addEventListener('mouseleave', () => {
+  tooltip.style.display = 'none';
+  if (hoveredMesh) {
+    hoveredMesh.material.copy(hoveredMesh.userData.origMat);
+    hoveredMesh = null;
+  }
+});
+
+// ─── Toolbar Buttons ──────────────────────────────────────────────────────────
+let wireframe = false;
+
+function setView(pos, target) {
+  camera.position.set(...pos);
+  controls.target.set(...(target || [0, 3, 0]));
+  controls.update();
+}
+
+document.getElementById('btn-perspective').onclick = () => setView([28, 18, 32]);
+document.getElementById('btn-top').onclick   = () => setView([0, 40, 0.01], [0, 0, 0]);
+document.getElementById('btn-front').onclick = () => setView([0, 8, 30]);
+document.getElementById('btn-side').onclick  = () => setView([30, 8, 0]);
+document.getElementById('btn-reset').onclick = () => {
+  camera.position.set(28, 18, 32);
+  controls.target.set(0, 3, 0);
+  controls.update();
+};
+
+document.getElementById('btn-wire').onclick = function() {
+  wireframe = !wireframe;
+  this.classList.toggle('active', wireframe);
+  allPieces.forEach(m => { m.material.wireframe = wireframe; });
+};
+
+// Highlight active view button
+['btn-perspective','btn-top','btn-front','btn-side'].forEach(id => {
+  document.getElementById(id).onclick = (function(origFn, btnId) {
+    return function() {
+      origFn();
+      ['btn-perspective','btn-top','btn-front','btn-side'].forEach(bid => {
+        document.getElementById(bid).classList.remove('active');
+      });
+      document.getElementById(btnId).classList.add('active');
+    };
+  })(document.getElementById(id).onclick, id);
+});
+
+// ─── Animate ──────────────────────────────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+animate();
+
+// ─── Resize ───────────────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  const nw = window.innerWidth, nh = window.innerHeight;
+  camera.aspect = nw / nh;
+  camera.updateProjectionMatrix();
+  renderer.setSize(nw, nh);
+});
+
+// ─── Hide Loading ─────────────────────────────────────────────────────────────
+setTimeout(() => {
+  const el = document.getElementById('loading');
+  el.style.opacity = '0';
+  setTimeout(() => el.remove(), 600);
+}, 1400);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+pos;name;qty;length;width;height;material;group;module
+1;Pilar P1;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+2;Pilar P2;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+3;Pilar P3;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+4;Pilar P4;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+5;Pilar P5;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+6;Pilar P6;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+7;Pilar P7;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+8;Pilar P8;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+9;Pilar P9;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+10;Pilar P10;1;5500;200;200;GL24h;Pilares;Estrutura Principal
+11;Viga Principal VP1;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+12;Viga Principal VP2;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+13;Viga Principal VP3;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+14;Viga Principal VP4;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+15;Viga Principal VP5;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+16;Viga Principal VP6;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+17;Viga Principal VP7;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+18;Viga Principal VP8;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+19;Viga Principal VP9;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+20;Viga Principal VP10;1;6491;160;300;GL28h;Vigas Principais;Estrutura Principal
+21;Tirante T1;1;12200;120;160;C24;Vigas Secundarias;Estrutura Principal
+22;Tirante T2;1;12200;120;160;C24;Vigas Secundarias;Estrutura Principal
+23;Tirante T3;1;12200;120;160;C24;Vigas Secundarias;Estrutura Principal
+24;Tirante T4;1;12200;120;160;C24;Vigas Secundarias;Estrutura Principal
+25;Tirante T5;1;12200;120;160;C24;Vigas Secundarias;Estrutura Principal
+26;Viga Cumeeira VC1;1;24000;140;200;GL24h;Vigas Secundarias;Cobertura
+27;Frechal F1;1;24000;140;200;GL24h;Vigas Secundarias;Estrutura Principal
+28;Frechal F2;1;24000;140;200;GL24h;Vigas Secundarias;Estrutura Principal
+29;Terca TC1-E;1;24000;100;160;C24;Tercas;Cobertura
+30;Terca TC1-D;1;24000;100;160;C24;Tercas;Cobertura
+31;Terca TC2-E;1;24000;100;160;C24;Tercas;Cobertura
+32;Terca TC2-D;1;24000;100;160;C24;Tercas;Cobertura
+33;Terca TC3-E;1;24000;100;160;C24;Tercas;Cobertura
+34;Terca TC3-D;1;24000;100;160;C24;Tercas;Cobertura
+35;Caibro CB (Esquerdo);39;6072;60;100;C24;Caibros;Cobertura
+36;Caibro CB (Direito);39;6072;60;100;C24;Caibros;Cobertura
+37;Contraventamento CV1-F;1;8139;80;100;C24;Contraventamento;Estrutura Principal
+38;Contraventamento CV1-T;1;8139;80;100;C24;Contraventamento;Estrutura Principal
+39;Contraventamento CV2-F;1;8139;80;100;C24;Contraventamento;Estrutura Principal
+40;Contraventamento CV2-T;1;8139;80;100;C24;Contraventamento;Estrutura Principal
